@@ -7,7 +7,6 @@ import cs236781.dataloader_utils as dataloader_utils
 
 from . import dataloaders
 
-
 class KNNClassifier(object):
     def __init__(self, k):
         self.k = k
