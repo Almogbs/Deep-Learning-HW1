@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 from torch import Tensor
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset, DataLoader, Subset
 
 import cs236781.dataloader_utils as dataloader_utils
 
@@ -23,7 +23,7 @@ class KNNClassifier(object):
         :return: self
         """
         self.x_train, self.y_train = dataloader_utils.flatten(dl_train)
-        self.n_classes = len(self.y_train)
+        self.n_classes = len(self.y_train.unique())
 
         return self
     
@@ -42,6 +42,7 @@ class KNNClassifier(object):
             y_pred[i] = int(torch.mode(self.y_train[inx])[0])
     
         return y_pred
+
 
 def l2_dist(x1: Tensor, x2: Tensor):
     """
@@ -81,23 +82,28 @@ def find_best_k(ds_train: Dataset, k_choices, num_folds):
         best_k: the value of k with the highest mean accuracy across folds
         accuracies: The accuracies per fold for each k (list of lists).
     """
-
+    fold_size = int(len(ds_train) / num_folds)
     accuracies = []
 
     for i, k in enumerate(k_choices):
         model = KNNClassifier(k)
 
-        # TODO:
-        #  Train model num_folds times with different train/val data.
-        #  Don't use any third-party libraries.
-        #  You can use your train/validation splitter from part 1 (note that
-        #  then it won't be exactly k-fold CV since it will be a
-        #  random split each iteration), or implement something else.
+        curr_accuracies = []
+        for fold in range(num_folds):
+            df_val = Subset(ds_train, list(range(fold * fold_size, (fold + 1) * fold_size)))
+            df_train = Subset(ds_train, list(range(0, fold * fold_size)) + list(range((fold + 1) * fold_size, len(ds_train))))
+            
+            x_val, y_val = dataloader_utils.flatten(DataLoader(df_val, batch_size=4, shuffle=False, num_workers=2))
+        
+            model.train(DataLoader(df_train, batch_size=4, shuffle=False, num_workers=2))
+            y_pred = model.predict(x_val)
 
-        # ====== YOUR CODE: ======
-        raise NotImplementedError()
-        # ========================
+            acc = accuracy(y_val, y_pred)
 
+            curr_accuracies.append(acc)
+        
+        accuracies.append(curr_accuracies)
+        
     best_k_idx = np.argmax([np.mean(acc) for acc in accuracies])
     best_k = k_choices[best_k_idx]
 

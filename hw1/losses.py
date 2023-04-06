@@ -38,27 +38,18 @@ class SVMHingeLoss(ClassifierLoss):
         :param y_predicted: The predicted class label for each sample: (N,).
         :return: The classification loss as a Tensor of shape (1,).
         """
-
         assert x_scores.shape[0] == y.shape[0]
         assert y.dim() == 1
 
-        # TODO: Implement SVM loss calculation based on the hinge-loss formula.
-        #  Notes:
-        #  - Use only basic pytorch tensor operations, no external code.
-        #  - Full credit will be given only for a fully vectorized
-        #    implementation (zero explicit loops).
-        #    Hint: Create a matrix M where M[i,j] is the margin-loss
-        #    for sample i and class j (i.e. s_j - s_{y_i} + delta).
+        T = x_scores[range(y.shape[0]), y]
+        M = x_scores - T.reshape(-1, 1) + self.delta
+        M = torch.where((M > 0) & (M != self.delta), M, torch.zeros(M.shape))
 
-        loss = None
-        # ====== YOUR CODE: ======
-        raise NotImplementedError()
-        # ========================
+        loss = M.sum() / y.shape[0]
 
-        # TODO: Save what you need for gradient calculation in self.grad_ctx
-        # ====== YOUR CODE: ======
-        raise NotImplementedError()
-        # ========================
+        self.grad_ctx['M'] = M
+        self.grad_ctx['x'] = x
+        self.grad_ctx['y'] = y
 
         return loss
 
@@ -68,14 +59,11 @@ class SVMHingeLoss(ClassifierLoss):
         :return: The gradient, of shape (D, C).
 
         """
-        # TODO:
-        #  Implement SVM loss gradient calculation
-        #  Same notes as above. Hint: Use the matrix M from above, based on
-        #  it create a matrix G such that X^T * G is the gradient.
+        M = self.grad_ctx['M']
+        x = self.grad_ctx['x']
+        y = self.grad_ctx['y']
 
-        grad = None
-        # ====== YOUR CODE: ======
-        raise NotImplementedError()
-        # ========================
-
-        return grad
+        G = torch.where(M > 0, 1.0, 0.0)
+        G[range(y.shape[0]), y] = -torch.sum(G, dim=1)
+        
+        return torch.matmul(x.T, G) / y.shape[0]
