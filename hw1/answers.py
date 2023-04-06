@@ -89,42 +89,38 @@ From the other hand, the the lr is bigger that the lr we chose, we might take a 
 # ==============
 # Part 4 answers
 
+# Part 4 answers
+
 part4_q1 = r"""
 **Your answer:**
 
-
-Write your answer using **markdown** and $\LaTeX$:
-```python
-# A code block
-a = 2
-```
-An equation: $e^{i\pi} -1 = 0$
+The ideal pattern to see in a residual plot is straight line of points that all of them aer exactly on the y=0, means that the predictions were right for every point. To generalize it, the closer the points are to y=0, the better our model predictions. If we compare the plot for the top-5 features with the final plot after CV, we could see that the points from the later are actually closer to y=0 and therfore we got better errors: mse=7.94, rsq=0.91 (compare to mse5=9.61, rsq5=0.89)
 
 """
 
 part4_q2 = r"""
 **Your answer:**
 
+1. It is still linear regression model, since after the feature mapping, we got a linear regression with higher (usually) dimention, and we need to find weights for each dimention after the mapping using exactly the same method without the feature mapping.
 
-Write your answer using **markdown** and $\LaTeX$:
-```python
-# A code block
-a = 2
-```
-An equation: $e^{i\pi} -1 = 0$
+2. We CAN fit any non-linear function of the original features with this approach just by activate the function on the selected features. One thing to keep in mind is the new dimention we get after the mapping could cost us train time.
 
+3. The dimention of W would increased to match the new features dimention, so it would be an hyperplane in the *new* dimention, but it wont be hyperplane in the original (pre-mapping) dimention. Therfore, in the original dimention, the decision boundary (i.e weights) could be much more complex than hyperplane.
 """
 
 part4_q3 = r"""
 **Your answer:**
 
+1. Since labda control our regularization, we dont want it to be too high, because if we will allow it to be too high, the MSE part of the loss function would be negligible compare to the regularization and we wont actually learn, so we would like lambda to be relativly small.
+Thus, we would like to use the logspace that gives us lower values (abs) that the linspace.
 
-Write your answer using **markdown** and $\LaTeX$:
-```python
-# A code block
-a = 2
-```
-An equation: $e^{i\pi} -1 = 0$
+2. We performed:
+
+For each lamda:
+    For each degree:
+        train k times.
+        
+Thus, the total number that the model was fitted to data is the: (Number of lamdas tested) * (Number of degrees tested) * (Number of folds) = 20 * 3 * 3 = 180.
 
 """
 
