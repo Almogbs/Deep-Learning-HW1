@@ -44,7 +44,7 @@ part2_q2 = r"""
 Explain why (i.e. in what sense) using k-fold CV, as detailed above, is better than:
 1. Using k-fold CV is better than training on the entire train-set with various models and selecting the best model with respect to train-set accuracy because on k-fold we are testing our model on unseen data aka validation-set and get a validation-error, which is, in fact, a proxy for the model's generalization error, when on the suggested method, we evaluating our model by the data it was trained with (known data).
 
-2. Using k-fold CV is better than training on the entire train-set with various models and selecting the best model with respect to test-set accuracy because on the suggested method, we using the test-set for tuning, and in a sense, training our model with the test-set, thing that conflict with the fact that the test-set error functions as the model's eneralization error, thing that does not happen in the k-fold method.
+2. Using k-fold CV is better than training on the entire train-set with various models and selecting the best model with respect to test-set accuracy because on the suggested method, we using the test-set for tuning, and in a sense, training our model with the test-set, thing that conflict with the fact that the test-set error functions as the model's generalization error, thing that does not happen in the k-fold method.
 """
 
 # ==============
