@@ -94,7 +94,7 @@ From the other hand, the the lr is bigger that the lr we chose, we might take a 
 part4_q1 = r"""
 **Your answer:**
 
-The ideal pattern to see in a residual plot is straight line of points that all of them aer exactly on the y=0, means that the predictions were right for every point. To generalize it, the closer the points are to y=0, the better our model predictions. If we compare the plot for the top-5 features with the final plot after CV, we could see that the points from the later are actually closer to y=0 and therfore we got better errors: mse=7.94, rsq=0.91 (compare to mse5=9.61, rsq5=0.89)
+The ideal pattern to see in a residual plot is straight line of points that all of them are exactly on the y=0, means that the predictions were right for every point. To generalize it, the closer the points are to y=0, the better our model predictions. If we compare the plot for the top-5 features with the final plot after CV, we could see that the points from the later are actually closer to y=0 and therfore we got better errors: mse=7.94, rsq=0.91 (compare to mse5=9.61, rsq5=0.89)
 
 """
 
